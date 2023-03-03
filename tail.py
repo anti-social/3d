@@ -25,7 +25,7 @@ tail_base_height = 15
 tail_height = tail_cone_height + tail_base_height
 
 rim_height = 1.5
-rim_width = 0.2
+rim_width = 0.3
 rim_hang_height = 0.1
 
 latch_width = 1
