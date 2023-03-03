@@ -13,7 +13,7 @@ feather_diameter = 54
 feather_height = 7.5
 feather_num_slices = 15
 feather_slice_angle = 0.1
-feather_slice_angle = 0.0
+#feather_slice_angle = 0.0
 feather_slice_height = feather_height / feather_num_slices
 num_feathers = 4
 feathers_angle = 360 / (num_feathers * 2)
@@ -61,7 +61,7 @@ X_VECTOR = ((0, 0, 0), (1, 0, 0))
 
 feather = (
     cq.Workplane("XY").workplane(invert=True)
-    .rect(feather_diameter, thickness, forConstruction=True)
+    .rect(feather_diameter - thickness / 2, thickness, forConstruction=True)
     .toPending()
     .extrude(
         feather_slice_height
