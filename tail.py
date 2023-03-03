@@ -13,7 +13,7 @@ feather_diameter = 54
 feather_height = 7.5
 feather_num_slices = 15
 feather_slice_angle = 0.1
-# feather_slice_angle = 0.0
+feather_slice_angle = 0.0
 feather_slice_height = feather_height / feather_num_slices
 num_feathers = 4
 feathers_angle = 360 / (num_feathers * 2)
@@ -29,8 +29,9 @@ rim_width = 0.2
 rim_hang_height = 0.1
 
 latch_width = 1
-latch_height = 19
+latch_height = 21
 latch_diameter = 3
+latch_fillet = 1.5
 
 Z_VECTOR = ((0, 0, 0), (0, 0, 1))
 X_VECTOR = ((0, 0, 0), (1, 0, 0))
@@ -149,20 +150,25 @@ tail_shell += rim
 
 tail = tail_shell + (stabilizer - cone)
 
-slot = (
-    cq.Workplane("XY")
-    .box(tail_diameter / 2, latch_width, latch_height)
-    .translate((tail_diameter / 4, 0, latch_height / 2))
-    .union(
-        cq.Workplane("YZ")
-        .cylinder(tail_diameter / 2, latch_diameter / 2)
-        .translate((tail_diameter / 4, 0, 0))
-    )
-    .translate((0, 0, tail_height - latch_height))
+latch = (
+    cq.Workplane("YZ" )
+    .sketch()
+    .push([cq.Location((0, -latch_height + latch_diameter / 2))])
+    .circle(latch_diameter / 2)
+    .push([cq.Location((0, -(latch_height - latch_diameter / 2) / 2))])
+    .rect(1, latch_height - latch_diameter / 2)
+    .clean()
+    .reset()
+    .vertices("<Y")
+    .fillet(latch_diameter)
+    .finalize()
+    .extrude(tail_diameter / 2)
+    .translate((0, 0, tail_height))
 )
 
+
 for i in range(3):
-    tail = tail.cut(slot.rotate(*Z_VECTOR, i * 120))
+    tail = tail.cut(latch.rotate(*Z_VECTOR, i * 120))
 
 show_object(tail)
 
